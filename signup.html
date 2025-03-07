@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/amazon-cognito-identity-js/5.2.2/amazon-cognito-identity.min.js"></script>
-
 </head>
 
 <body class="bg-red-50 min-h-screen flex flex-col">
@@ -43,50 +42,47 @@
 </body>
 
 <script>
-    document.getElementById("registrationForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+    // Initialize Cognito User Pool
+    const poolData = {
+        UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
+        ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
+    };
 
-    const email = document.getElementById("emailInputRegister").value;
-    const password = document.getElementById("passwordInputRegister").value;
-    const confirmPassword = document.getElementById("password2InputRegister").value;
-    const signupMessage = document.getElementById("signupMessage");
+    const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-    signupMessage.textContent = "";
-    signupMessage.classList.remove("text-red-600", "text-green-600");
+    // Signup Form Handling
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+        event.preventDefault();
 
-    if (password !== confirmPassword) {
-        signupMessage.textContent = "Passwords do not match.";
-        signupMessage.classList.add("text-red-600");
-        return;
-    }
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
 
-    const attributeList = [
-        new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email })
-    ];
-
-    userPool.signUp(email, password, attributeList, null, function(err, result) {
-        if (err) {
-            signupMessage.textContent = err.message || JSON.stringify(err);
-            signupMessage.classList.add("text-red-600");
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
             return;
         }
-        signupMessage.textContent = "Sign-up successful! Check your email for verification.";
-        signupMessage.classList.add("text-green-600");
 
-        setTimeout(() => {
-            window.location.href = "profile_fill.html";  // Redirect after successful signup
-        }, 2000);
+        const attributeList = [
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email })
+        ];
+
+        userPool.signUp(email, password, attributeList, null, function(err, result) {
+            if (err) {
+                alert("Error: " + err.message || JSON.stringify(err));
+                return;
+            }
+
+            alert("Sign-up successful! Check your email for verification.");
+            setTimeout(() => {
+                window.location.href = "profile_fill.html";  // Redirect after successful signup
+            }, 2000);
+        });
     });
-});
-function checkUser() {
-        const poolData = {
-            UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
-            ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
-        };
-        
-        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+    // Check if User is Logged In
+    function checkUser() {
         const cognitoUser = userPool.getCurrentUser();
-        
         if (cognitoUser) {
             cognitoUser.getSession((err, session) => {
                 if (err || !session.isValid()) {
@@ -95,6 +91,8 @@ function checkUser() {
                 }
                 console.log("User is logged in:", cognitoUser.getUsername());
             });
+        } else {
+            console.log("No user is logged in.");
         }
     }
 
