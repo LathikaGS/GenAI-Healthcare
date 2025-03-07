@@ -39,64 +39,64 @@
             <p class="text-gray-600 text-sm text-center mt-4">Already have an account? <a href="login.html" class="text-red-600 font-semibold hover:underline">Sign in</a></p>
         </div>
     </div>
-</body>
 
-<script>
-    // Initialize Cognito User Pool
-    const poolData = {
-        UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
-        ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
-    };
+    <script>
+        // Initialize AWS Cognito User Pool
+        const poolData = {
+            UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
+            ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
+        };
 
-    const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-    // Signup Form Handling
-    document.getElementById("signupForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+        // Handle Signup Form Submission
+        document.getElementById("signupForm").addEventListener("submit", function(event) {
+            event.preventDefault();
 
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
 
-        if (password !== confirmPassword) {
-            alert("Passwords do not match.");
-            return;
-        }
-
-        const attributeList = [
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email })
-        ];
-
-        userPool.signUp(email, password, attributeList, null, function(err, result) {
-            if (err) {
-                alert("Error: " + err.message || JSON.stringify(err));
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
                 return;
             }
 
-            alert("Sign-up successful! Check your email for verification.");
-            setTimeout(() => {
-                window.location.href = "profile_fill.html";  // Redirect after successful signup
-            }, 2000);
-        });
-    });
+            const attributeList = [
+                new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email })
+            ];
 
-    // Check if User is Logged In
-    function checkUser() {
-        const cognitoUser = userPool.getCurrentUser();
-        if (cognitoUser) {
-            cognitoUser.getSession((err, session) => {
-                if (err || !session.isValid()) {
-                    console.log("Session expired or invalid.");
+            userPool.signUp(email, password, attributeList, null, function(err, result) {
+                if (err) {
+                    alert("Error: " + err.message || JSON.stringify(err));
                     return;
                 }
-                console.log("User is logged in:", cognitoUser.getUsername());
+
+                alert("Sign-up successful! Please check your email for the verification link.");
+                setTimeout(() => {
+                    window.location.href = "verify.html";  // Redirect to email verification page
+                }, 2000);
             });
-        } else {
-            console.log("No user is logged in.");
+        });
+
+        // Check if User is Logged In
+        function checkUser() {
+            const cognitoUser = userPool.getCurrentUser();
+            if (cognitoUser) {
+                cognitoUser.getSession((err, session) => {
+                    if (err || !session.isValid()) {
+                        console.log("Session expired or invalid.");
+                        return;
+                    }
+                    console.log("User is logged in:", cognitoUser.getUsername());
+                });
+            } else {
+                console.log("No user is logged in.");
+            }
         }
-    }
 
-    window.onload = checkUser;
-</script>
+        window.onload = checkUser;
+    </script>
 
+</body>
 </html>
