@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIHealthMate - Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/amazon-cognito-identity-js/5.2.2/amazon-cognito-identity.min.js"></script>
 </head>
 <body class="bg-red-50 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
@@ -27,31 +29,44 @@
             </div>
             
             <button type="button" onclick="loginUser()" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700">
-    Login
-</button>
-
+                Login
+            </button>
         </form>
         
         <p class="text-sm text-gray-600 text-center mt-4">Don't have an account? 
             <a href="signup.html" class="text-red-600 hover:underline">Sign up here</a>
         </p>
-        <script>
-            function loginUser() {
-            const email = document.getElementById("emailInputLogin").value;
-            const password = document.getElementById("passwordInputLogin").value;
-        
+    </div>
+
+    <script>
+        // Initialize Cognito User Pool
+        const poolData = {
+            UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
+            ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
+        };
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        function loginUser() {
+            const email = document.getElementById("emailInputSignin").value;
+            const password = document.getElementById("passwordInputSignin").value;
+
+            if (!email || !password) {
+                alert("Please fill in both fields.");
+                return;
+            }
+
             const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
                 Username: email,
                 Password: password
             });
-        
+
             const userData = {
                 Username: email,
                 Pool: userPool
             };
-        
+
             const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-        
+
             cognitoUser.authenticateUser(authenticationDetails, {
                 onSuccess: function(result) {
                     alert("Login successful!");
@@ -59,12 +74,10 @@
                     window.location.href = "dashboard.html"; // Redirect to the dashboard
                 },
                 onFailure: function(err) {
-                    alert(err.message || JSON.stringify(err));
+                    alert("Login failed: " + (err.message || JSON.stringify(err)));
                 }
             });
         }
-
-        </script>
-    </div>
+    </script>
 </body>
 </html>
