@@ -207,18 +207,18 @@
             <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg hidden z-50">
                 <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100 transition duration-300">View Profile</a>
                 <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100 transition duration-300">Settings</a>
-                <a onclick="logout()" class="block px-4 py-2 hover:bg-gray-100 transition duration-300">Logout</a>
+                <a onclick="logoutUser()" class="block px-4 py-2 hover:bg-gray-100 transition duration-300">Logout</a>
 
                 <script>
-                    function logout() {
-                        // Clear session storage and/or local storage
-                        sessionStorage.clear();
-                        localStorage.clear();
-
-                        // Optionally, invalidate the session on the server (if using authentication)
-                        // Redirect to login or home page
-                        window.location.href = "index.html"; // Change this to your login/home page
+                    function logoutUser() {
+                    const cognitoUser = userPool.getCurrentUser();
+                    if (cognitoUser) {
+                        cognitoUser.signOut();
+                        alert("Logged out successfully!");
+                        window.location.href = "signin.html"; // Redirect to login page
                     }
+                }
+
                 </script>
 
                 
