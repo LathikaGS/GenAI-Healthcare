@@ -6,12 +6,6 @@
     <title>AIHealthMate</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    def index():
-    user = session.get('user')
-    if user:
-        return  f'Hello, {user["email"]}. <a href="/logout">Logout</a>'
-    else:
-        return f'Welcome! Please <a href="login.html">Login</a>.'
         <script>
         function toggleDropdown() {
             document.getElementById('profileDropdown').classList.toggle('hidden');
