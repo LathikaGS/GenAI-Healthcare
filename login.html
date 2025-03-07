@@ -26,7 +26,10 @@
                     class="mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-red-500 focus:border-red-500">
             </div>
             
-            <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700">Sign In</button>
+            <button type="button" onclick="loginUser()" class="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700">
+    Login
+</button>
+
         </form>
         
         <p class="text-sm text-gray-600 text-center mt-4">Don't have an account? 
@@ -34,32 +37,32 @@
         </p>
         <script>
             function loginUser() {
-    const email = document.getElementById("emailInputLogin").value;
-    const password = document.getElementById("passwordInputLogin").value;
-
-    const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
-        Username: email,
-        Password: password
-    });
-
-    const userData = {
-        Username: email,
-        Pool: userPool
-    };
-
-    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-    cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: function(result) {
-            alert("Login successful!");
-            console.log("Access Token:", result.getAccessToken().getJwtToken());
-            window.location.href = "dashboard.html"; // Redirect to the dashboard
-        },
-        onFailure: function(err) {
-            alert(err.message || JSON.stringify(err));
+            const email = document.getElementById("emailInputLogin").value;
+            const password = document.getElementById("passwordInputLogin").value;
+        
+            const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+                Username: email,
+                Password: password
+            });
+        
+            const userData = {
+                Username: email,
+                Pool: userPool
+            };
+        
+            const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+        
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: function(result) {
+                    alert("Login successful!");
+                    console.log("Access Token:", result.getAccessToken().getJwtToken());
+                    window.location.href = "dashboard.html"; // Redirect to the dashboard
+                },
+                onFailure: function(err) {
+                    alert(err.message || JSON.stringify(err));
+                }
+            });
         }
-    });
-}
 
         </script>
     </div>
