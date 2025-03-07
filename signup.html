@@ -78,7 +78,27 @@
         }, 2000);
     });
 });
+function checkUser() {
+        const poolData = {
+            UserPoolId: "eu-north-1_KlqHnN9y9",  // Replace with your User Pool ID
+            ClientId: "6a6qvqgomq0us3vc6ocq1emd4i" // Replace with your App Client ID
+        };
+        
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+        const cognitoUser = userPool.getCurrentUser();
+        
+        if (cognitoUser) {
+            cognitoUser.getSession((err, session) => {
+                if (err || !session.isValid()) {
+                    console.log("Session expired or invalid.");
+                    return;
+                }
+                console.log("User is logged in:", cognitoUser.getUsername());
+            });
+        }
+    }
 
+    window.onload = checkUser;
 </script>
 
 </html>
