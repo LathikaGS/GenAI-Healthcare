@@ -43,21 +43,42 @@
 </body>
 
 <script>
-    document.getElementById("signupForm").addEventListener("submit", function(event) {
-        event.preventDefault(); 
-        
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+    const email = document.getElementById("emailInputRegister").value;
+    const password = document.getElementById("passwordInputRegister").value;
+    const confirmPassword = document.getElementById("password2InputRegister").value;
+    const signupMessage = document.getElementById("signupMessage");
+
+    signupMessage.textContent = "";
+    signupMessage.classList.remove("text-red-600", "text-green-600");
+
+    if (password !== confirmPassword) {
+        signupMessage.textContent = "Passwords do not match.";
+        signupMessage.classList.add("text-red-600");
+        return;
+    }
+
+    const attributeList = [
+        new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: email })
+    ];
+
+    userPool.signUp(email, password, attributeList, null, function(err, result) {
+        if (err) {
+            signupMessage.textContent = err.message || JSON.stringify(err);
+            signupMessage.classList.add("text-red-600");
             return;
         }
+        signupMessage.textContent = "Sign-up successful! Check your email for verification.";
+        signupMessage.classList.add("text-green-600");
 
-        alert("Account created successfully! Redirecting to profile setup...");
-        window.location.href = "profile_fill.html";
+        setTimeout(() => {
+            window.location.href = "profile_fill.html";  // Redirect after successful signup
+        }, 2000);
     });
+});
+
 </script>
 
 </html>
