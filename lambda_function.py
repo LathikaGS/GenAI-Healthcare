@@ -11,10 +11,10 @@ s3 = boto3.client("s3")
 textract = boto3.client("textract")
 
 # RDS Credentials (Use environment variables)
-RDS_HOST = os.getenv("RDS_HOST", "prescription-db.cv8sgw4ow1xg.us-east-1.rds.amazonaws.com")
-RDS_USER = os.getenv("RDS_USER", "admin")
-RDS_PASS = os.getenv("RDS_PASS", "humaraproject")
-RDS_DBNAME = os.getenv("RDS_DBNAME", "prescription_db")
+RDS_HOST = os.getenv("RDS_HOST", "")
+RDS_USER = os.getenv("RDS_USER", "")
+RDS_PASS = os.getenv("RDS_PASS", "")
+RDS_DBNAME = os.getenv("RDS_DBNAME", "")
 
 def extract_text_from_s3(bucket, key):
     """Extract text from an image in S3 using Textract."""
