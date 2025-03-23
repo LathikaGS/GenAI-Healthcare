@@ -11,10 +11,10 @@ st.set_page_config(
 )
 
 # AWS S3 Configuration
-AWS_REGION = "us-east-1"
-AWS_ACCESS_KEY = "AKIAW5BDQW63SMBVGJU3"
-AWS_SECRET_KEY = "q+90RXfLWtlBmoKI5Dd1noJUHDNr6EX3XIvnmsMt"
-BUCKET_NAME = "prescription-uploads1"
+AWS_REGION = ""
+AWS_ACCESS_KEY = "YOUR_ACCESS_KEY"
+AWS_SECRET_KEY = "YPUR_SECRET_KEY"
+BUCKET_NAME = "YOUR_BUCKET_NAME"
 
 # Initialize S3 Client
 s3 = boto3.client(
